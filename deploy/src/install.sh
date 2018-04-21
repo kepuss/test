@@ -29,9 +29,39 @@ function createSwap {
     swapon /swapfile
 }
 
+function displayLogs {
+    echo ""
+    echo "--------------------------------/var/log/konga.log-----------------------------------------"
+    echo ""
+    cat /var/log/konga.log
+    echo ""
+    echo "--------------------------------/var/log/oxd-server/oxd-server.log----------------------------------------"
+    echo ""
+    cat /var/log/oxd-server/oxd-server.log
+    echo ""
+    echo "----------------------/opt/gluu-gateway/setup/gluu-gateway-setup_error.log-----------------------------------"
+    echo ""
+    cat /opt/gluu-gateway/setup/gluu-gateway-setup_error.log
+    echo ""
+    echo "----------------------/opt/gluu-gateway/setup/gluu-gateway-setup.log-----------------------------------"
+    echo ""
+    cat /opt/gluu-gateway/setup/gluu-gateway-setup.log
+    echo ""
+    echo "----------------------netstat -tulpn----------------------------------"
+    echo ""
+    netstat -tulpn
+    echo ""
+    echo "----------------------services----------------------------------"
+    echo ""
+    service kong status
+    service konga status
+    service oxd-server status
+    service oxd-https-extension status
+}
+
 createSwap
 prepareSources
 installGG
 configureGG
-
-
+sleep 20
+displayLogs
