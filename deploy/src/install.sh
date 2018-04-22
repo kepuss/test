@@ -59,9 +59,19 @@ function displayLogs {
     service oxd-https-extension status
 }
 
+function checkKonga {
+    if lsof -Pi :1338 -sTCP:LISTEN -t >/dev/null ; then
+        echo "Konga is running"
+    else
+        echo "ERROR: Konga is not running"
+        exit 1
+    fi
+}
+
 createSwap
 prepareSources
 installGG
 configureGG
 sleep 20
 displayLogs
+checkKonga
