@@ -68,10 +68,44 @@ function checkKonga {
     fi
 }
 
+function checkKong {
+    if lsof -Pi :8000 -sTCP:LISTEN -t >/dev/null ; then
+        echo "Kong is running"
+    else
+        echo "ERROR: Kong is not running"
+        exit 1
+    fi
+}
+
+function checkOxdHttps {
+    if lsof -Pi :8443 -sTCP:LISTEN -t >/dev/null ; then
+        echo "Oxd-https-extension is running"
+    else
+        echo "ERROR: oxd-https-extension is not running"
+        exit 1
+    fi
+}
+
+function checkOxd {
+    if lsof -Pi :8099 -sTCP:LISTEN -t >/dev/null ; then
+        echo "Oxd-server is running"
+    else
+        echo "ERROR: Oxd is not running"
+        exit 1
+    fi
+}
+
+function checkServices {
+    checkKonga
+    checkKong
+    checkOxd
+    checkOxdHttps
+}
+
 createSwap
 prepareSources
 installGG
 configureGG
 sleep 20
 displayLogs
-checkKonga
+checkServices
