@@ -1,58 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <WebElementEntity>
    <description></description>
-   <name>a_</name>
+   <name>button_Login</name>
    <tag></tag>
-   <elementGuidId>193a6d91-11a7-4315-8ec4-6df2f5d3fce0</elementGuidId>
-   <selectorCollection>
-      <entry>
-         <key>BASIC</key>
-         <value>//a[(text() = '
-            
-             
-            
-            
-          ' or . = '
-            
-             
-            
-            
-          ')]</value>
-      </entry>
-      <entry>
-         <key>XPATH</key>
-         <value>/html/body/div[2]/div[1]/nav/div/div[2]/ul/li[2]/a</value>
-      </entry>
-   </selectorCollection>
-   <selectorMethod>XPATH</selectorMethod>
+   <elementGuidId>3c80323a-abf0-4a0f-aae5-f097112ba4b9</elementGuidId>
+   <selectorMethod>BASIC</selectorMethod>
    <useRalativeImagePath>false</useRalativeImagePath>
    <webElementProperties>
       <isSelected>true</isSelected>
       <matchCondition>equals</matchCondition>
       <name>tag</name>
       <type>Main</type>
-      <value>a</value>
+      <value>button</value>
    </webElementProperties>
    <webElementProperties>
       <isSelected>false</isSelected>
       <matchCondition>equals</matchCondition>
       <name>class</name>
       <type>Main</type>
-      <value>nav-auth-img-container dropdown-toggle</value>
+      <value>btn btn-primary btn-block</value>
    </webElementProperties>
    <webElementProperties>
       <isSelected>false</isSelected>
       <matchCondition>equals</matchCondition>
-      <name>aria-haspopup</name>
+      <name>data-ng-click</name>
       <type>Main</type>
-      <value>true</value>
+      <value>login()</value>
    </webElementProperties>
    <webElementProperties>
       <isSelected>false</isSelected>
       <matchCondition>equals</matchCondition>
-      <name>aria-expanded</name>
+      <name>data-ng-disabled</name>
       <type>Main</type>
-      <value>false</value>
+      <value>!loginForm.$valid || busy</value>
    </webElementProperties>
    <webElementProperties>
       <isSelected>true</isSelected>
@@ -60,17 +40,14 @@
       <name>text</name>
       <type>Main</type>
       <value>
-            
-             
-            
-            
-          </value>
+      Login
+    </value>
    </webElementProperties>
    <webElementProperties>
       <isSelected>false</isSelected>
       <matchCondition>equals</matchCondition>
       <name>xpath</name>
       <type>Main</type>
-      <value>id(&quot;bs-example-navbar-collapse-1&quot;)/ul[@class=&quot;nav navbar-nav navbar-right&quot;]/li[@class=&quot;dropdown&quot;]/a[@class=&quot;nav-auth-img-container dropdown-toggle&quot;]</value>
+      <value>id(&quot;konga&quot;)/body[@class=&quot;body ng-scope&quot;]/div[@class=&quot;main-container-wrapper full-width no-margin clear-left&quot;]/div[@class=&quot;main-container-wrapper-static&quot;]/div[@class=&quot;container-fluid&quot;]/div[@class=&quot;main-container container&quot;]/div[@class=&quot;main-container-inner ng-scope&quot;]/div[@class=&quot;row page-login ng-scope&quot;]/div[@class=&quot;col-md-12&quot;]/div[@class=&quot;login-form-container&quot;]/div[@class=&quot;panel panel-default no-margin&quot;]/div[@class=&quot;panel-body&quot;]/div[@class=&quot;ng-scope&quot;]/form[@class=&quot;ng-pristine ng-valid ng-scope&quot;]/div[@class=&quot;form-group&quot;]/button[@class=&quot;btn btn-primary btn-block&quot;]</value>
    </webElementProperties>
 </WebElementEntity>

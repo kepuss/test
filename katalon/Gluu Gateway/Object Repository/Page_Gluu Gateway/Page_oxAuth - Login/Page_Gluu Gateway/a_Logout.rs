@@ -4,7 +4,23 @@
    <name>a_Logout</name>
    <tag></tag>
    <elementGuidId>e33fa5d8-af27-48e6-9718-6e2d539ebdec</elementGuidId>
-   <selectorMethod>BASIC</selectorMethod>
+   <selectorCollection>
+      <entry>
+         <key>BASIC</key>
+         <value>//a[(text() = '
+                
+                Logout
+              ' or . = '
+                
+                Logout
+              ')]</value>
+      </entry>
+      <entry>
+         <key>XPATH</key>
+         <value>/html/body/div[2]/div[1]/nav/div/div[2]/ul/li[2]/ul/li[4]/a</value>
+      </entry>
+   </selectorCollection>
+   <selectorMethod>XPATH</selectorMethod>
    <useRalativeImagePath>false</useRalativeImagePath>
    <webElementProperties>
       <isSelected>true</isSelected>
