@@ -14,7 +14,7 @@
       <guid>68c68667-b5ab-40ad-813e-b0b2857dbdd5</guid>
       <isReuseDriver>false</isReuseDriver>
       <isRun>true</isRun>
-      <testCaseId>Test Cases/1_GG_Simple_Login</testCaseId>
+      <testCaseId>Test Cases/GG_Simple_Login</testCaseId>
    </testCaseLink>
    <testCaseLink>
       <guid>0f96f21d-3436-4e62-a561-bc4901405a5a</guid>
@@ -39,11 +39,5 @@
       <isReuseDriver>false</isReuseDriver>
       <isRun>true</isRun>
       <testCaseId>Test Cases/GG_E2E_UMA_Flow</testCaseId>
-   </testCaseLink>
-   <testCaseLink>
-      <guid>791aac6b-50ad-49ff-901d-ba440005925a</guid>
-      <isReuseDriver>false</isReuseDriver>
-      <isRun>true</isRun>
-      <testCaseId>Test Cases/GG_Rest_UMA_Flow</testCaseId>
    </testCaseLink>
 </TestSuiteEntity>

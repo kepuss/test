@@ -285,7 +285,36 @@ def rpt = rptParsedResp.get('data').get('access_token')
 
 WebUI.verifyNotEqual(rpt, null)
 
+//------------------RequestNoTokenAPI ----------------
+HttpClient noTokenClient = new DefaultHttpClient()
+
+HttpUriRequest apiNoTokenRequest = new HttpGet('http://'+host+':8000/docs/')
+
+apiNoTokenRequest.addHeader(new BasicHeader('Authorization', 'Bearer m' + rpt))
+
+apiNoTokenRequest.addHeader(new BasicHeader('Host', api_host ))
+
+HttpResponse noTokenHttpResponse = noTokenClient.execute(apiNoTokenRequest)
+//def invalidTokenBbody = EntityUtils.toString(invalidTokenHttpResponse.getEntity(),"utf-8")
+WebUI.verifyEqual(noTokenHttpResponse.getStatusLine().statusCode, 401)
+
+
+//------------------RequestInvalidTokenAPI ----------------
+HttpClient invalidTokenClient = new DefaultHttpClient()
+
+HttpUriRequest apiInvalidTokenRequest = new HttpGet('http://'+host+':8000/docs/')
+
+apiInvalidTokenRequest.addHeader(new BasicHeader('Authorization', 'Bearer m' + rpt))
+
+apiInvalidTokenRequest.addHeader(new BasicHeader('Host', api_host ))
+
+HttpResponse invalidTokenHttpResponse = invalidTokenClient.execute(apiInvalidTokenRequest)
+//def invalidTokenBbody = EntityUtils.toString(invalidTokenHttpResponse.getEntity(),"utf-8")
+WebUI.verifyEqual(invalidTokenHttpResponse.getStatusLine().statusCode, 401)
+
+
 //------------------RequestAPI ----------------
+
 HttpUriRequest apiRequest = new HttpGet('http://'+host+':8000/docs/')
 
 apiRequest.addHeader(new BasicHeader('Authorization', 'Bearer ' + rpt))
@@ -295,6 +324,6 @@ apiRequest.addHeader(new BasicHeader('Host', api_host ))
 HttpClient client = new DefaultHttpClient()
 
 HttpResponse httpResponse = client.execute(apiRequest)
-def body = EntityUtils.toString(httpResponse.getEntity(),"utf-8")
+//def body = EntityUtils.toString(httpResponse.getEntity(),"utf-8")
 WebUI.verifyEqual(httpResponse.getStatusLine().statusCode, 200)
 

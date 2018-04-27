@@ -169,16 +169,51 @@ def parsedResp = parser.parseText(response.getResponseBodyContent())
 
 def accessToken = parsedResp.get('data').get('access_token')
 
+//------------------RequestAPI -- no token ----------------
+//HttpClient noTokenClient = new DefaultHttpClient()
+
+//HttpUriRequest noTokenRequest = new HttpGet('http://'+host+':8000'+api_path)
+//noTokenRequest.addHeader(new BasicHeader('Authorization', 'Bearer'))
+
+//noTokenRequest.addHeader(new BasicHeader('Host', api_host ))
+
+
+//HttpResponse httpNoTokenResponse = noTokenClient.execute(noTokenRequest)
+
+//WebUI.verifyEqual(httpNoTokenResponse.getStatusLine().statusCode, 401)
+
+//noTokenClient.close()
+
+//------------------RequestAPI -- invalid token ----------------
+HttpClient invalidTokenClient = new DefaultHttpClient()
+
+HttpUriRequest invalidTokenRequest = new HttpGet('http://'+host+':8000'+api_path)
+
+invalidTokenRequest.addHeader(new BasicHeader('Authorization', 'Bearer b' + accessToken))
+
+invalidTokenRequest.addHeader(new BasicHeader('Host', api_host ))
+
+HttpResponse httpInvalidTokenResponse = invalidTokenClient.execute(invalidTokenRequest)
+
+WebUI.verifyEqual(httpInvalidTokenResponse.getStatusLine().statusCode, 401)
+
+invalidTokenClient.close()
+
 //------------------RequestAPI ----------------
+HttpClient validTokenClient = new DefaultHttpClient()
+
 HttpUriRequest apiRequest = new HttpGet('http://'+host+':8000'+api_path)
 
 apiRequest.addHeader(new BasicHeader('Authorization', 'Bearer ' + accessToken))
 
 apiRequest.addHeader(new BasicHeader('Host', api_host ))
 
-HttpClient client = new DefaultHttpClient()
+HttpResponse httpResponse = validTokenClient.execute(apiRequest)
 
-HttpResponse httpResponse = client.execute(apiRequest)
 def body = EntityUtils.toString(httpResponse.getEntity(),"utf-8")
+
 WebUI.verifyEqual(httpResponse.getStatusLine().statusCode, 200)
+
+validTokenClient.close()
+
 

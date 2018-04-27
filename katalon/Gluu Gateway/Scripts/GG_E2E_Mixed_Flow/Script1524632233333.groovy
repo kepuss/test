@@ -28,23 +28,27 @@ import org.apache.http.client.HttpClient as HttpClient
 import org.apache.http.impl.client.DefaultHttpClient as DefaultHttpClient
 import org.apache.http.HttpResponse as HttpResponse
 import org.apache.http.message.BasicHeader as BasicHeader
-import com.kms.katalon.core.testdata.TestDataFactory
-import org.apache.http.util.EntityUtils
+import org.apache.http.util.EntityUtils as EntityUtils
 
-def env = TestDataFactory.findTestData("Data Files/dev1TestData")
-def host = env.getValue("Value", 1)
-def username = env.getValue("Value", 2)
-def password = env.getValue("Value", 3)
+def env = TestDataFactory.findTestData('Data Files/dev1TestData')
 
+def host = env.getValue('Value', 1)
 
-def api_host = new Random().nextInt()+'mix.example.com'
+def username = env.getValue('Value', 2)
+
+def password = env.getValue('Value', 3)
+
+def api_host = new Random().nextInt() + 'mix.example.com'
+
 def api_path = ''
+
 def upstream_host = 'https://www.gluu.org'
+
 def uma_path = '/docs/ce/3.1.2/'
 
 WebUI.openBrowser('')
 
-WebUI.navigateToUrl('https://'+host+':1338/#!/login')
+WebUI.navigateToUrl(('https://' + host) + ':1338/#!/login')
 
 WebUI.click(findTestObject('Page_Gluu Gateway/Page_oxAuth - Login/Page_Gluu Gateway/Page_Gluu Gateway/Page_Gluu Gateway/Page_Gluu Gateway/Page_Gluu Gateway/button_Login'))
 
@@ -151,6 +155,8 @@ WebUI.click(findTestObject('Page_Gluu Gateway/Page_oxAuth - Login/Page_Gluu Gate
 
 WebUI.click(findTestObject('Page_Gluu Gateway/Page_oxAuth - Login/Page_Gluu Gateway/Page_Gluu Gateway/Page_Gluu Gateway/Page_Gluu Gateway/Page_Gluu Gateway/button_create credentials'))
 
+WebUI.scrollToElement(findTestObject('Page_Gluu Gateway (7)/span_'), 5)
+
 WebUI.click(findTestObject('Page_Gluu Gateway (7)/span_'))
 
 WebUI.setText(findTestObject('Page_Gluu Gateway/Page_oxAuth - Login/Page_Gluu Gateway/Page_Gluu Gateway/Page_Gluu Gateway/Page_Gluu Gateway/Page_Gluu Gateway/input_form-control ng-pristine'), 
@@ -193,7 +199,6 @@ WebUI.closeBrowser()
 JsonSlurper parser = new JsonSlurper()
 
 //-----------Get customer token----------------------
-
 RequestObject request = findTestObject('get token')
 
 request.setHttpBody(((((('{"oxd_id":"' + oxdId) + '","client_id":"') + clientId) + '","client_secret":"') + clientSecret) + 
@@ -205,16 +210,46 @@ def parsedResp = parser.parseText(response.getResponseBodyContent())
 
 def accessToken = parsedResp.get('data').get('access_token')
 
+//------------------RequestNoTokenAPI ----------------
+HttpUriRequest apiNoTokenRequest = new HttpGet((('http://' + host) + ':8000') + uma_path)
+
+apiNoTokenRequest.addHeader(new BasicHeader('Authorization', ""))
+
+apiNoTokenRequest.addHeader(new BasicHeader('Host', api_host))
+
+HttpClient noTokenClient = new DefaultHttpClient()
+
+HttpResponse httpNoTokenResponse = noTokenClient.execute(apiNoTokenRequest)
+
+//def body = EntityUtils.toString(httpResponse.getEntity(),"utf-8")
+WebUI.verifyEqual(httpNoTokenResponse.getStatusLine().statusCode, 403)
+
+//------------------RequestInvalidTokenAPI ----------------
+HttpUriRequest apiInvalidTokenRequest = new HttpGet((('http://' + host) + ':8000') + uma_path)
+
+apiInvalidTokenRequest.addHeader(new BasicHeader('Authorization', 'Bearer m' + accessToken))
+
+apiInvalidTokenRequest.addHeader(new BasicHeader('Host', api_host))
+
+HttpClient invalidTokenClient = new DefaultHttpClient()
+
+HttpResponse httpInvalidTokenResponse = invalidTokenClient.execute(apiInvalidTokenRequest)
+
+//def body = EntityUtils.toString(httpResponse.getEntity(),"utf-8")
+WebUI.verifyEqual(httpInvalidTokenResponse.getStatusLine().statusCode, 401)
+
 //------------------RequestAPI ----------------
-HttpUriRequest apiRequest = new HttpGet('http://'+host+':8000'+uma_path)
+HttpUriRequest apiRequest = new HttpGet((('http://' + host) + ':8000') + uma_path)
 
 apiRequest.addHeader(new BasicHeader('Authorization', 'Bearer ' + accessToken))
 
-apiRequest.addHeader(new BasicHeader('Host', api_host ))
+apiRequest.addHeader(new BasicHeader('Host', api_host))
 
 HttpClient client = new DefaultHttpClient()
 
 HttpResponse httpResponse = client.execute(apiRequest)
-def body = EntityUtils.toString(httpResponse.getEntity(),"utf-8")
+
+def body = EntityUtils.toString(httpResponse.getEntity(), 'utf-8')
+
 WebUI.verifyEqual(httpResponse.getStatusLine().statusCode, 200)
 
