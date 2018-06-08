@@ -5,8 +5,10 @@
 
 ![alt text](uma.png "Logo Title Text 1")
 
+### 2. Flow
+![alt text](flow.png "Logo Title Text 1")
 
-### 2. RS Configuration
+### 3. RS Configuration
 1. Resource configuration (Kong API configuration)
 ````
 curl -X POST http://gg.example.com:8001/apis 
@@ -55,7 +57,7 @@ protection_document (pretty printed)
             ]
           },
           "data": [
-            "http:\/\/photoz.example.com\/dev\/actions\/view"
+            "<YOUR_SCOPE>"
           ]
         }
       }
@@ -64,13 +66,13 @@ protection_document (pretty printed)
 ]
 ```
 From the last call you get oxd_id, client_id and client_secret
-### 3. UMA client registration
-1. Register consumer
+### 4. UMA client registration
+4. Register consumer
 ````
 curl -X POST http://gg.example.com:8001/consumers/ 
     --data "username=uma_client"
 ````
-2. Register UMA credentials
+5. Register UMA credentials
 ````
 curl -X POST http://gg.example.com:8001/consumers/uma_client/gluu-oauth2-client-auth/ 
     --data name="uma_consumer_cred" 
@@ -80,8 +82,8 @@ curl -X POST http://gg.example.com:8001/consumers/uma_client/gluu-oauth2-client-
 ````
 From the last call you get oxd_id, client_id and client_secret
 
-### 4. Call UMA protected API
-1. LogIn Consumer
+### 5. Call UMA protected API
+6. LogIn Consumer
  ````
  curl -X POST https://gg.example.com:8443/get-client-token 
      --data oxd_id="<YOUR_OXD_ID>" 
@@ -90,7 +92,7 @@ From the last call you get oxd_id, client_id and client_secret
  ````
  From this call you get Consumer accessToken
 
- 2. LogIn UmaResource
+ 7. LogIn UmaResource
   ````
   curl -X POST https://gg.example.com:8443/get-client-token 
       --data oxd_id="<YOUR_UMA_OXD_ID>" 
@@ -99,7 +101,7 @@ From the last call you get oxd_id, client_id and client_secret
   ````
 From this call you get resource accessToken
 
-3. Get resource ticket
+8. Get resource ticket
   ````
   curl -X POST https://gg.example.com:8443/uma-rs-check-access
       --Header "Authorization Bearer <UMA_RESOURCE_TOKEN>"
@@ -109,7 +111,7 @@ From this call you get resource accessToken
   ````
  From this call you get ticket
   
-4. Get RPT token
+9. Get RPT token
   ````
   curl -X POST https://gg.example.com:8443/uma-rp-get-rpt
       --Header "Authorization Bearer <CONSUMER_TOKEN>"
@@ -118,15 +120,41 @@ From this call you get resource accessToken
 ````
 From this call you get accesstoken (RPT)
 
-5. Call UMA protected API
+10. Call UMA protected API
   ````
   curl -X GET http://gg.example.com:8000/<YOUR_PATH>
       --Header "Authorization: Bearer <YOUR_RPT>"
       --Header "Host: <YOUR_HOST>" 
 ````
 
-### 5. How to redirect to the claims ??
+### 6. UMA flow with claims gathering
+8.1. Prerequisites 
+* UMA scope with Authorization Policy 
+![alt text](uma_scope.png "Logo Title Text 1")
+* Enabled UMA RPT Polices & UMA Claims Gathering
+![alt text](scripts.png "Logo Title Text 1")
+* Register RS with correct scope
 
-### 6. Resolve failed UMA policy 
+8.2. Getting need_info ticket
+  ````
+  curl -X POST https://gg.example.com:8443/uma-rp-get-rpt
+      --Header "Authorization Bearer <CONSUMER_TOKEN>"
+      --Header "Content-Type: application/json" 
+      --data '{"oxd_id": "<YOUR_CONSUMER_OXD_ID>","ticket":"<YOUR_TICKET>","scope":[<YOUR_SCOPE>]}'
+````
+From this call you get need_info ticket
 
-That shows how to configure the RS
+8.3. Getting claims gathering url
+  ````
+  curl -X POST https://gg.example.com:8443/uma-rp-get-claims-gathering-url"
+      --Header "Authorization Bearer <CONSUMER_TOKEN>"
+      --Header "Content-Type: application/json" 
+      --data '{"oxd_id": "<YOUR_CONSUMER_OXD_ID>","ticket":"<YOUR_TICKET>",""claims_redirect_uri"":[<YOUR_CLAIMS_URI>]}'
+````
+From this call you get ticket
+
+8.4. Enter gathering url in browser
+    
+You may need to add your claims redirect url to your client configuration in CE
+
+Continue to 9.
