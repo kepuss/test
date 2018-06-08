@@ -1,18 +1,24 @@
 import requests
 import json
+import os
+import time
+import urlparse
 
 
-ggHost="dev1.gluu.org"
+ggHost="demo.gluu.org"
 ceHost="ce-dev6.gluu.org"
 host="demo.example.com"
-path="/roadmap"
+path="/posts"
+upsreamUrl="https://jsonplaceholder.typicode.com"
+claimsGathering=False
+claimsGatheringUrl="https://client.example.com/cb"
 
 #------------Create API
 # 1. Resource configuration (Kong API configuration)
 requests.delete("http://"+ggHost+":8001/apis/demo_api")
 response= requests.post("http://"+ggHost+":8001/apis",headers={"Content-Type":"application/x-www-form-urlencoded"},params={"name":"demo_api",
                                                                                                                            "hosts":host,
-                                                                                                                           "upstream_url":"https://gluu.org"})
+                                                                                                                           "upstream_url":upsreamUrl})
 print("Status: "+str(response.status_code))
 print(json.dumps(response.json(), indent=2))
 
@@ -24,7 +30,7 @@ print(json.dumps(response.json(), indent=2))
 
 # 3. Securing RS with UMA
 response= requests.post("http://"+ggHost+":8001/apis/demo_api/plugins",headers={"Content-Type":"application/x-www-form-urlencoded"}, params={"name":"gluu-oauth2-rs","config.oxd_host":"https://localhost:8443","config.uma_server_host":"https://"+ceHost,
-                                                                                                                                             "config.protection_document":"[ { \"path\": \""+path+"\", \"conditions\": [ { \"httpMethods\": [ \"GET\" ], \"scope_expression\": {\"rule\": { \"and\": [ { \"var\": 0 } ] }, \"data\": [ \"http://photoz.example.com/dev/actions/view\" ] } } ] } ]"})
+                                                                                                                                             "config.protection_document":"[ { \"path\": \""+path+"\", \"conditions\": [ { \"httpMethods\": [ \"GET\" ], \"scope_expression\": {\"rule\": { \"and\": [ { \"var\": 0 } ] }, \"data\": [ \"demo_scope\" ] } } ] } ]"})
 print("Status: "+str(response.status_code))
 print(json.dumps(response.json(), indent=2))
 
@@ -42,7 +48,7 @@ print(json.dumps(response.json(), indent=2))
 
 # 2. Register UMA credentials
 response= requests.post("http://"+ggHost+":8001/consumers/uma_client/gluu-oauth2-client-auth/",headers={"Content-Type":"application/x-www-form-urlencoded"},
-                        params={"name":"uma_consumer_cred","op_host":ceHost,"oxd_http_url":"https://localhost:8443","uma_mode":"true"})
+                        params={"name":"uma_consumer_cred"+str(time.time()),"op_host":ceHost,"oxd_http_url":"https://localhost:8443","uma_mode":"true"})
 print("Status: "+str(response.status_code))
 print(json.dumps(response.json(), indent=2))
 
@@ -54,7 +60,7 @@ consumer_client_secret = response.json()['client_secret']
 # 1. LogIn Consumer
 response= requests.post("https://"+ggHost+":8443/get-client-token",headers={"Content-Type":"application/json"},
                         json={"oxd_id":consumer_oxd_id,"client_id":consumer_client_id,"client_secret":consumer_client_secret,
-                                      "op_host":"https://"+ceHost, "scope":["uma_protection","openid"]}, verify=False)
+                                      "op_host":"https://"+ceHost, "scope":["uma_protection","openid, demo_scope"]}, verify=False)
 print("Status: "+str(response.status_code))
 print(json.dumps(response.json(), indent=2))
 consumer_access_token = response.json()['data']['access_token']
@@ -77,6 +83,26 @@ print("Status: "+str(response.status_code))
 print(json.dumps(response.json(), indent=2))
 ticket = response.json()['data']['ticket']
 
+#--------------------
+#--------------------
+#----------CLAIMS GATHERING
+
+#--------------get claims gathering url
+if claimsGathering:
+    response= requests.post("https://"+ggHost+":8443/uma-rp-get-claims-gathering-url",headers={"Content-Type":"application/json","Authorization":"Bearer "
+                                                                                                                                 ""+uma_access_token},
+                        json={"oxd_id":uma_oxd_id,"ticket":ticket,"claims_redirect_uri":claimsGatheringUrl}, verify=False)
+    print("Status: "+str(response.status_code))
+    print(json.dumps(response.json(), indent=2))
+    claims_url = response.json()['data']['url']
+    parsed = urlparse.urlparse(claims_url)
+    claims_client_id= urlparse.parse_qs(parsed.query)['client_id']
+    print ("Add claims gathering url "+claimsGatheringUrl+" for client id "+claims_client_id[0]+ " in "+ceHost)
+    print("Open claims gathering url in browser - " + claims_url)
+    response = raw_input("Please enter response url: ")
+#------------------
+#------------------
+
 
 #------------- rpt
 # 4. Get RPT token
@@ -90,11 +116,21 @@ print(json.dumps(response.json(), indent=2))
 rpt = response.json()['data']['access_token']
 
 
-
 #--------------get secured API--------
-response= requests.get("http://"+ggHost+":8000"+path,headers={"Host":host,"Authorization":"Bearer "+rpt})
+response= requests.get("http://"+ggHost+":8000"+path,headers={"Host":host, "Authorization": 'Bearer {}'.format(rpt)})
 print("Status: "+str(response.status_code))
 print(response.request.body)
 print(response.request.headers)
 print(json.dumps(response.json(), indent=2))
+
+
+
+
+
+
+
+
+
+
+
 
