@@ -9,6 +9,8 @@
 ![alt text](flow.png "Logo Title Text 1")
 
 ### 3. RS Configuration
+RS configuration can be done either via REST calls or via GluuGateway GUI
+#### REST Configuration
 1. Resource configuration (Kong API configuration)
 ````
 curl -X POST http://gg.example.com:8001/apis 
@@ -66,7 +68,29 @@ protection_document (pretty printed)
 ]
 ```
 From the last call you get oxd_id, client_id and client_secret
+
+#### Gluu Gateway GUI configuration
+1. Resource configuration (Kong API configuration)
+* Enter https://gg.example.com:1338/#!/apis
+* Click "Add new API"
+* Fill required fields
+
+2. Configuration of oAuth plugin
+* Click edit icon of created API
+* Click plugins button in left menu
+* Add new plugin
+* Select custom
+* Click plus icon in Gluu oauth2 client auth plugin
+
+3. Securing RS with UMA
+* Click security button in API list
+* Fill UMA resource fields
+* Update configuration
+
 ### 4. UMA client registration
+UMA client registraion can be done either via REST calls or via GluuGateway GUI
+
+#### REST Configuration
 4. Register consumer
 ````
 curl -X POST http://gg.example.com:8001/consumers/ 
@@ -81,6 +105,20 @@ curl -X POST http://gg.example.com:8001/consumers/uma_client/gluu-oauth2-client-
     --data uma_mode=true
 ````
 From the last call you get oxd_id, client_id and client_secret
+#### Gluu Gateway GUI configuration
+4. Register consumer
+* Enter https://gg.example.com:1338/#!/consumers
+* Click create consumer
+* Fill new consumer form
+
+5. Register UMA credentials
+* Click on created consumer
+* Click on credentials
+* Select OAUTH2
+* Click Create Credentials
+* Select UMA Mode in Credentials form
+* Save credentials
+
 
 ### 5. Call UMA protected API
 6. LogIn Consumer
