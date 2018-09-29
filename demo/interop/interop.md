@@ -1,6 +1,6 @@
-###Gluu Gateway - Keycloak Interoperation
+# Gluu Gateway - Keycloak Interoperation
 
-##Description
+## Description
 This configuration is created to visualize the flexibility of Gluu Gateway to work with different IDPs (not only Gluu Server which is the default 
 IDP).
 Gluu Gateway is a API gateway software which introduces additional layer of resource protection. It gives an easy way to implement User Managed 
@@ -18,6 +18,7 @@ Access protocol to RESTful resources. Gluu Gateway is built on top of Kong API G
 1. Dynamic client registration creates clients with "Authorization Enabled" set to true
 2. Ignore unused json fields in requests (by default keycloak is throwing exception)
 3. Change name of token-introspection url in OPIC and UMA discovery point
+4. Create realm (in example name of realm is "oxd")
 
 ### Gluu Gateway
 1. OXD - Send "token_type_hint" = "requesting_party_token" parameter in order to be able to introspect RPT in Keycloak.
@@ -88,11 +89,11 @@ oxd_http_url=https;//localhost:8443
 ```
 
 #### Keycloak Resource policy setup
-1. Find client using id from [Resurce creation](#####Resource view in Gluu Gateway)
+1. Find client using id from resurce creation (red circle).
 ![](keycloak-GG-rp-client.png)
-2. Go to Authorization -> Resources
+2. Go to Authorization -> Resources.
 ![](keycloak-GG-resource-config.png)
-3. Create permission and assign desired policy (In example, the policy accepts every call)
+3. Create permission and assign desired policy (In example, the policy accepts every call).
 ![](keycloak_grant-policy.png)
 
 
