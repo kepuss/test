@@ -1,14 +1,14 @@
 # Gluu Gateway - Keycloak Interoperation
 
 ## Description
-This configuration is created to visualize the flexibility of Gluu Gateway to work with different IDPs (not only Gluu Server which is the default 
+This interoperation demo is created to visualize the flexibility of Gluu Gateway to work with different IDPs (not only Gluu Server which is the default 
 IDP).
-Gluu Gateway is a API gateway software which introduces additional layer of resource protection. It gives an easy way to implement User Managed 
-Access protocol to RESTful resources. Gluu Gateway is built on top of Kong API Gateway and thus it inherits all functionalities additionally to the
- benefits gained from UMA protocol. 
+Gluu Gateway is an API gateway software which introduces an additional layer of resource protection. It gives an easy way to implement User Managed 
+Access protocol for RESTful resources. Gluu Gateway is built on top of the Kong API Gateway and thus it inherits all its functionalities, which is additional
+ benefit to the Gluu Gateway's core features.  
  
  Gluu Gateway is the first API Gateway which implements UMA protocol and because of open source nature of UMA protocol and Gluu Gateway 
- implementation it is easy to integrate with other vendors. In this article I would like to explain how you can use Gluu Gateway with your Existing
+ implementation it is easy to integrate with other vendors. In this article I would like to show how you can use Gluu Gateway with your Existing
   Keycloak IDP server.
 
 ## Architecture
@@ -39,7 +39,7 @@ hosts=api-keycloak-interop&u
 pstream_url=https://jsonplaceholder.typicode.com
 ```
 
-##### Secure it with oauth plugin with Keycloak IDP (REST call or Administrator panel)
+##### Secure it with oAuth plugin with Keycloak IDP url (REST call or Administrator panel)
 ```aidl
 POST /apis/api-keycloak-interop/plugins HTTP/1.1
 Host: gluu-gateway:8001
